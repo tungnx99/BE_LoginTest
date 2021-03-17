@@ -1,8 +1,8 @@
-﻿using BE.DTO;
-using BE.Models;
+﻿using Domain.DTOs;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using Service.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,46 +16,30 @@ namespace BE.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        UserService userService;
+        public AccountController()
+        {
+            userService = new UserService();
+        }
         // GET: api/<AccountController>
         [HttpGet]
         public JsonResult Get()
         {
-            return new JsonResult(GetALL());
+            return new JsonResult(Domain.Entities.User.GetList());
         }
 
         // GET api/<AccountController>/5
         [HttpGet("{id}")]
         public JsonResult Get(int id)
         {
-            return new JsonResult(GetALL()[id]);
+            return new JsonResult(Domain.Entities.User.GetList()[id]);
         }
 
         // POST api/<AccountController>
         [HttpPost]
-        public JsonResult Post([FromBody] AccountDTO data)
+        public JsonResult Post([FromBody] UserDTO data)
         {
-            List<AccountDTO> accounts = GetALL();
-            if (accounts.Find(a=> a.UserName == data.UserName && a.Password == data.Password) == null)
-            {
-                return new JsonResult(false);
-            }
-            return new JsonResult(true);
-        }
-
-        private List<AccountDTO> accounts;
-        public List<AccountDTO> GetALL()
-        {
-            if(this.accounts == null)
-            {
-                accounts = new List<AccountDTO>();
-                accounts.Add(new AccountDTO() { UserName = "admin1", Password = "123456" });
-                accounts.Add(new AccountDTO() { UserName = "admin2", Password = "123456" });
-                accounts.Add(new AccountDTO() { UserName = "admin3", Password = "123456" });
-                accounts.Add(new AccountDTO() { UserName = "admin4", Password = "123456" });
-                accounts.Add(new AccountDTO() { UserName = "admin5", Password = "123456" });
-                accounts.Add(new AccountDTO() { UserName = "admin6", Password = "123456" });
-            }
-            return accounts;
+            return new JsonResult(userService.ILogin(data));
         }
 
         // PUT api/<AccountController>/5
