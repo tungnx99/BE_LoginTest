@@ -1,0 +1,25 @@
+﻿using Domain.DTOs;
+using Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Domain.Common
+{
+    public class Paganation<T>
+    {
+        public int TotalPage
+        {
+            get
+            {
+                if (PageSize <= 0)
+                    PageSize = 1;
+                return (int)Math.Round((decimal)TotalItems / (decimal)PageSize, MidpointRounding.ToPositiveInfinity);
+            }
+        }
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
+        public int TotalItems { get; set; }
+        public List<T> Data { get; set; }
+    }
+}

@@ -10,6 +10,14 @@ namespace Domain.DTOs
         [Required]
         public String UserName { get; set; }
         [Required]
+        public String Type { get; set; }
+    }
+
+    public class UserLogin
+    {
+        [Required]
+        public String UserName { get; set; }
+        [Required]
         public String Password { get; set; }
     }
 }

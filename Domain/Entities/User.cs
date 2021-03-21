@@ -2,14 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Text;
 
 namespace Domain.Entities
 {
     public class User
     {
+        [Key]
         [Required]
-        public String ID { get; set; }
+        public String Id { get; set; }
         [Required]
         public DateTime BrithDay { get; set; }
         [Required]
@@ -22,19 +24,23 @@ namespace Domain.Entities
         public String UserName { get; set; }
         [Required]
         public String Password { get; set; }
+        [Required]
+        public String Type { get; set; }
 
-        static List<UserDTO> accounts;
-        public static List<UserDTO> GetList()
+        static List<User> accounts;
+        //public UserDTO MapUserDto()
+        //{
+        //    return new UserDTO() { UserName = UserName, Password = Password };
+        //}
+        public static List<User> GetList()
         {
             if (accounts == null)
             {
-                accounts = new List<UserDTO>();
-                accounts.Add(new UserDTO() { UserName = "admin1", Password = "123456" });
-                accounts.Add(new UserDTO() { UserName = "admin2", Password = "123456" });
-                accounts.Add(new UserDTO() { UserName = "admin3", Password = "123456" });
-                accounts.Add(new UserDTO() { UserName = "admin4", Password = "123456" });
-                accounts.Add(new UserDTO() { UserName = "admin5", Password = "123456" });
-                accounts.Add(new UserDTO() { UserName = "admin6", Password = "123456" });
+                accounts = new List<User>();
+                for (int i = 0; i < 101; i++)
+                {
+                    accounts.Add(new User() { UserName = "admin" + (i + 1), Password = "123456" });
+                }
             }
             return accounts;
         }

@@ -1,4 +1,5 @@
-﻿using Domain.DTOs;
+﻿using AutoMapper;
+using Domain.DTOs;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -16,30 +17,38 @@ namespace BE.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        UserService userService;
-        public AccountController()
+        IUserService userService;
+        public AccountController(IUserService userService)
         {
-            userService = new UserService();
+            this.userService = userService;
         }
         // GET: api/<AccountController>
         [HttpGet]
-        public JsonResult Get()
+        public IActionResult Get()
         {
-            return new JsonResult(Domain.Entities.User.GetList());
+            return Ok(Domain.Entities.User.GetList());
         }
 
-        // GET api/<AccountController>/5
-        [HttpGet("{id}")]
-        public JsonResult Get(int id)
+        [Route("list")]
+        [HttpGet]
+        public IActionResult GetList([FromQuery] SerachPaganationDTO<UserDTO> userDTO)
         {
-            return new JsonResult(Domain.Entities.User.GetList()[id]);
+            return Ok(userService.GetUsers(userDTO));
+        }
+
+        [Route("item")]
+        // GET api/<AccountController>/5
+        [HttpGet]
+        public IActionResult Get([FromQuery]string id)
+        {
+            return Ok(userService.GetUser(id));
         }
 
         // POST api/<AccountController>
         [HttpPost]
-        public JsonResult Post([FromBody] UserDTO data)
+        public IActionResult Login([FromBody] UserLogin data)
         {
-            return new JsonResult(userService.ILogin(data));
+            return Ok(userService.Login(data));
         }
 
         // PUT api/<AccountController>/5
