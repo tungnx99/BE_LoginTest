@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.DTOs
+namespace Domain.Common
 {
     public class SerachPaganationDTO<T>
     {

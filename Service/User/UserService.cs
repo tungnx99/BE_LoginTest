@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Data;
 using Domain.Common;
 using Domain.DTOs;
 using Domain.Entities;
@@ -13,20 +14,25 @@ namespace Service.Users
     public class UserService : IUserService
     {
         private IMapper _mapper;
-        private List<User> users;
-        public UserService(IMapper mapper)
+        private ShopDbContext shhopDbContext;
+        public UserService(IMapper mapper, ShopDbContext shopDbContext)
         {
             this._mapper = mapper;
-            users = User.GetList();
+            this.shhopDbContext = shopDbContext;
         }
         public UserDTO GetUser(string obj)
         {
-            var user = users.FirstOrDefault(t => t.Id == obj);
-
-            if (user != null)
+            using(ShopDbContext shopDbContext = this.shhopDbContext)
             {
-                return _mapper.Map<User, UserDTO>(user);
+                var users = shopDbContext.Users.ToList();
+                var user = users.FirstOrDefault(t => t.Id == obj);
+
+                if (user != null)
+                {
+                    return _mapper.Map<User, UserDTO>(user);
+                }
             }
+            
             return null;
         }
 
@@ -34,25 +40,33 @@ namespace Service.Users
         {
             if (userPaganationDTO != null)
             {
-                var result = _mapper.Map<SerachPaganationDTO<UserDTO>, Paganation<UserDTO>>(userPaganationDTO);
-                var data = users.Where(t =>
-                t.UserName.Contains(userPaganationDTO.Search.UserName) &&
-                t.Type.Contains(userPaganationDTO.Search.Type)
+                using (ShopDbContext shopDbContext = this.shhopDbContext)
+                {
+                    var users = shopDbContext.Users.ToList();
+                    var result = _mapper.Map<SerachPaganationDTO<UserDTO>, Paganation<UserDTO>>(userPaganationDTO);
+                    var data = users.Where(t =>
+                        t.UserName.Contains(userPaganationDTO.Search.UserName ?? "")
                     ).OrderBy(t => t.Type).ThenBy(t => t.UserName).ToList();
-                result.Data = _mapper.Map<List<User>, List<UserDTO>>(data);
-                result.TotalItems = users.Count;
-                return result;
+                    result.Data = _mapper.Map<List<User>, List<UserDTO>>(data);
+                    result.TotalItems = users.Count;
+                    return result;
+                }
             }
             return new Paganation<UserDTO>();
         }
 
         public bool Login(UserLogin data)
         {
+            var result = false;
             //if (data == null)
             //    return false;
-            var accounts = User.GetList();
-            var account = accounts.Any(a => a.UserName == data.UserName && a.Password == data.Password);
-            return account;
+            using (ShopDbContext shopDbContext = this.shhopDbContext)
+            {
+                var users = shopDbContext.Users.ToList();
+                var account = users.Any(a => a.UserName == data.UserName && a.Password == data.Password);
+                result = account;
+            }
+            return result;
         }
     }
 }

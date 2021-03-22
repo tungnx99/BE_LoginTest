@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain.Common;
 using Domain.DTOs;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -23,11 +24,11 @@ namespace BE.Controllers
             this.userService = userService;
         }
         // GET: api/<AccountController>
-        [HttpGet]
-        public IActionResult Get()
-        {
-            return Ok(Domain.Entities.User.GetList());
-        }
+        //[HttpGet]
+        //public IActionResult Get()
+        //{
+        //    return Ok(Domain.Entities.User.GetList());
+        //}
 
         [Route("list")]
         [HttpGet]

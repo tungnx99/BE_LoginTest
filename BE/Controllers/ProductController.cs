@@ -1,8 +1,11 @@
-﻿using Domain.DTOs;
+﻿using Domain.Common;
+using Domain.DTOs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Product;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,30 +23,41 @@ namespace BE.Controllers
             _productService = productService;
         }
         // GET: api/<ProductController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        //[HttpGet]
+        //public IEnumerable<string> Get()
+        //{
+        //    return new string[] { "value1", "value2" };
+        //}
 
-        // GET api/<ProductController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        //// GET api/<ProductController>/5
+        //[HttpGet]
+        //public ActionResult Get([FromQuery] String id)
+        //{
+        //    return Ok(_productService.GetProduct(id));
+        //}
+
+        [HttpGet]
+        public ActionResult GetProducts([FromQuery] SerachPaganationDTO<ProductDTO> serachPaganation)
         {
-            return "value";
+            return Ok(_productService.GetProducts(serachPaganation));
         }
 
         // POST api/<ProductController>
         [HttpPost]
-        public ActionResult Insert([FromBody] ProductDTO dto)
+        [Consumes("multipart/form-data")]
+        public async Task<ActionResult> Insert([FromForm] ProductDTO dto)
         {
+            if (!await _productService.Upload(dto.files, dto.Code))
+                return Ok(false);
             return Ok(_productService.Insert(dto));
         }
 
         // PUT api/<ProductController>/5
         [HttpPut]
-        public ActionResult Update([FromQuery] string id, [FromBody] ProductDTO dto)
+        public async Task<ActionResult> Update([FromQuery] string id, [FromForm] ProductDTO dto)
         {
+            if (!await _productService.Upload(dto.files, dto.Code))
+                return Ok(false);
             return Ok(_productService.Update(id, dto));
         }
 
@@ -53,5 +67,12 @@ namespace BE.Controllers
         {
             return Ok(_productService.Delete(id));
         }
+
+        //[Route("image")]
+        //[HttpGet]
+        //public ActionResult GetImage([FromQuery] int image)
+        //{
+        //    return Ok(true);
+        //}
     }
 }
