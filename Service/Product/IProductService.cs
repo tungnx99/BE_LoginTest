@@ -1,4 +1,4 @@
-﻿using Domain.Common;
+﻿using Common.Paganation;
 using Domain.DTOs;
 using Microsoft.AspNetCore.Http;
 using System;

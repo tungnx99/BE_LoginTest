@@ -1,10 +1,8 @@
-﻿using Domain.DTOs;
-using Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Common
+namespace Common.Paganation
 {
     public class Paganation<T>
     {

@@ -7,15 +7,12 @@ using System.Text;
 
 namespace Domain.Entities
 {
-    public class User
+    public class User : BaseEntity
     {
-        [Key]
-        [Required]
-        public String Id { get; set; }
         [Required]
         public DateTime BrithDay { get; set; }
         [Required]
-        public String Sex { get; set; }
+        public String Sex { get; set; } // Todo: Rename to Gender
         [Required]
         public String Name { get; set; }
         [Required]
@@ -25,7 +22,7 @@ namespace Domain.Entities
         [Required]
         public String Password { get; set; }
         [Required]
-        public int Type { get; set; }
+        public int Type { get; set; } // Todo: Use specific name eg: Role
 
         //static List<User> accounts;
         ////public UserDTO MapUserDto()

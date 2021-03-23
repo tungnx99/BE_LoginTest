@@ -13,23 +13,23 @@ namespace UnitTest
     [TestClass]
     public class UnitTestUserService
     {
-        public UserService userService;
-        public UnitTestUserService(IMapper mapper)
+        public IUserService _userService;
+        public UnitTestUserService(IUserService userService)
         {
-            userService = new UserService(mapper);
+            _userService = userService;
         }
         //TestGetInformation
         [TestMethod]
         public void TestIInformationNotNull()
         {
-            var result = userService.GetUser("1");
+            var result = _userService.GetUser("1");
             Assert.IsNotNull(result);
         }
 
         [TestMethod]
         public void TestIInformationValueNotExist()
         {
-            var result = userService.GetUser("-1");
+            var result = _userService.GetUser("-1");
             Assert.IsNull(result);
         }
 
@@ -37,21 +37,21 @@ namespace UnitTest
         [TestMethod]
         public void TestILoginNull()
         {
-            var result = userService.Login(null);
+            var result = _userService.Login(null);
             Assert.IsFalse(result);
         }
 
         [TestMethod]
         public void TestILoginTrue()
         {
-            var result = userService.Login(new UserLogin() { UserName = "admin1", Password = "123456"});
+            var result = _userService.Login(new UserLogin() { UserName = "admin1", Password = "123456"});
             Assert.IsTrue(result);
         }
 
         [TestMethod]
         public void TestILoginFalse()
         {
-            var result = userService.Login(new UserLogin() { UserName = "", Password = "" });
+            var result = _userService.Login(new UserLogin() { UserName = "", Password = "" });
             Assert.IsFalse(result);
         }
     }

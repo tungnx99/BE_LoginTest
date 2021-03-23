@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using Common.Paganation;
 using Data;
-using Domain.Common;
 using Domain.DTOs;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -24,30 +24,20 @@ namespace Service.Product
         }
         public bool Delete(String id)
         {
-            using (ShopDbContext shopDbContext = this.shopDbContext)
+            var product = shopDbContext.Products.Find(id);
+            if (product == null) // Todo: Add braces
+                return false;
+            if (Upload(null, product.Code).Result)
             {
-                try
-                {
-                    var product = shopDbContext.Products.Where(i => i.Id == id).FirstOrDefault();
-                    if (product == null)
-                        return false;
-                    if (Upload(null, product.Code).Result)
-                    {
-                        shopDbContext.Products.Remove(product);
-                        shopDbContext.SaveChanges();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.ToString());
-                    return false;
-                }
+                shopDbContext.Products.Remove(product);
+                shopDbContext.SaveChanges();
             }
             return true;
         }
 
-        public Paganation<Domain.Entities.Product> GetProducts(SerachPaganationDTO<ProductDTO> serachPaganationDTO)
+        public Paganation<Domain.Entities.Product> GetProducts(SerachPaganationDTO<ProductDTO> serachPaganationDTO) // Todo: Wrong parameter name
         {
+            // Should not put context in using... block
             using (ShopDbContext shopDbContext = this.shopDbContext)
             {
                 if (serachPaganationDTO != null)
@@ -74,7 +64,7 @@ namespace Service.Product
             using (ShopDbContext shopDbContext = this.shopDbContext)
             {
                 var product = shopDbContext.Products.Find(id);
-                if (product != null)
+                if (product != null) // Add braces
                     return product;
             }
             return new Domain.Entities.Product();
@@ -85,7 +75,7 @@ namespace Service.Product
             using (ShopDbContext shopDbContext = this.shopDbContext)
             {
                 try
-                {
+                {// No try...catch => throw exception and handle in high level scope
                     var product = _mapper.Map<ProductDTO, Domain.Entities.Product>(model);
                     product.Id = Guid.NewGuid().ToString();
                     shopDbContext.Products.Add(product);

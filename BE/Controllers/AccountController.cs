@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
-using Domain.Common;
+using Common;
+using Common.Http;
+using Common.Paganation;
 using Domain.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using Service.Auth;
 using Service.Users;
 using System;
 using System.Collections.Generic;
@@ -16,12 +20,14 @@ namespace BE.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountController : BaseController
     {
-        IUserService userService;
-        public AccountController(IUserService userService)
+        private readonly IUserService _userService;
+        private readonly IAuthService _authService;
+        public AccountController(IUserService userService, IAuthService authService)
         {
-            this.userService = userService;
+            _authService = authService;
+            _userService = userService;
         }
         // GET: api/<AccountController>
         //[HttpGet]
@@ -32,24 +38,37 @@ namespace BE.Controllers
 
         [Route("list")]
         [HttpGet]
+        [Authorize]
         public IActionResult GetList([FromQuery] SerachPaganationDTO<UserDTO> userDTO)
         {
-            return Ok(userService.GetUsers(userDTO));
+            return CommonResponse(0, _userService.GetUsers(userDTO));
         }
 
         [Route("item")]
         // GET api/<AccountController>/5
         [HttpGet]
-        public IActionResult Get([FromQuery]string id)
+        public IActionResult Get([FromQuery] string id)
         {
-            return Ok(userService.GetUser(id));
+            return Ok(_userService.GetUser(id));
         }
 
         // POST api/<AccountController>
         [HttpPost]
         public IActionResult Login([FromBody] UserLogin data)
         {
-            return Ok(userService.Login(data));
+            if (!ModelState.IsValid || data == null || string.IsNullOrWhiteSpace(data.UserName))
+            {
+                return CommonResponse(1, Constants.InvalidAuthInfoMsg);
+            }
+            try
+            {
+                var token = _authService.Login(data);
+                return CommonResponse(0, token);
+            }
+            catch
+            {
+                return CommonResponse(1, Constants.InvalidAuthInfoMsg);
+            }
         }
 
         // PUT api/<AccountController>/5

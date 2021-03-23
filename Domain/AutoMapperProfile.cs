@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Domain.Common;
+using Common.Paganation;
 using Domain.DTOs;
 using Domain.Entities;
 using System;

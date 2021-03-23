@@ -1,4 +1,5 @@
 using AutoMapper;
+using BE.AppConfig;
 using Data;
 using Domain;
 using Microsoft.AspNetCore.Builder;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Service;
 using Service.Product;
 using Service.Users;
 using System;
@@ -35,39 +37,28 @@ namespace BE
         public void ConfigureServices(IServiceCollection services)
         {
 
+
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
                     builder =>
                     {
                         builder.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
+                            .AllowAnyMethod()
+                            .AllowAnyHeader();
                     });
             });
 
+            
             services.AddControllers();
-            //Mapper
-          
-            ////Find all auto mapper profile
-            //services.AddAutoMapper(typeof(Startup));
-            //Configdependecyinjection.Setup(services);
 
-            ////Find and start only
-            var mapperConfig = new AutoMapper.MapperConfiguration(t => t.AddProfile(new AutoMapperProfile()));
-            IMapper mapper = mapperConfig.CreateMapper();
-            services.AddSingleton(mapper);
+            Configdependecyinjection.Setup(services, Configuration);
+            DataDiConfig.Setup(services, Configuration);
+            ConfigureDi.Setup(services);
 
-            //DbContext
-            services.AddDbContext<ShopDbContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("ShopDbContext"), b => b.MigrationsAssembly("Data")).ConfigureWarnings(c => c.Log((RelationalEventId.CommandExecuting, LogLevel.Debug)));
-            }, ServiceLifetime.Transient);
+            //Auth
+            JwtAuthConfig.Setup(services, Configuration);
 
-            //services.AddScoped<ShopDbContext, IDbContext>();
-            //Scoped
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IProductService, ProductService>();
             //services.AddDirectoryBrowser();
         }
 
@@ -98,14 +89,16 @@ namespace BE
             //    RequestPath = "/share"
             //});
 
+            //sort
+            app.UseAuthentication();
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
         }
     }
 }

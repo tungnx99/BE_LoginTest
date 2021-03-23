@@ -1,4 +1,4 @@
-﻿using Domain.Common;
+﻿using Common.Paganation;
 using Domain.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +39,8 @@ namespace BE.Controllers
         [HttpGet]
         public ActionResult GetProducts([FromQuery] SerachPaganationDTO<ProductDTO> serachPaganation)
         {
-            return Ok(_productService.GetProducts(serachPaganation));
+            var products = _productService.GetProducts(serachPaganation);
+            return Ok(products);
         }
 
         // POST api/<ProductController>
@@ -47,15 +48,20 @@ namespace BE.Controllers
         [Consumes("multipart/form-data")]
         public async Task<ActionResult> Insert([FromForm] ProductDTO dto)
         {
-            if (!await _productService.Upload(dto.files, dto.Code))
-                return Ok(false);
-            return Ok(_productService.Insert(dto));
+            bool isUploadOk = await _productService.Upload(dto.files, dto.Code);
+            if (isUploadOk)
+            {
+                bool isInsertOk = _productService.Insert(dto);
+                return base.Ok(isInsertOk);
+            }
+            return Ok(false);
         }
 
         // PUT api/<ProductController>/5
         [HttpPut]
         public async Task<ActionResult> Update([FromQuery] string id, [FromForm] ProductDTO dto)
         {
+            // Wrap if with braces or use conditional expression
             if (!await _productService.Upload(dto.files, dto.Code))
                 return Ok(false);
             return Ok(_productService.Update(id, dto));
@@ -65,7 +71,16 @@ namespace BE.Controllers
         [HttpDelete]
         public ActionResult Delete([FromQuery] String id)
         {
-            return Ok(_productService.Delete(id));
+            try
+            {
+                bool isDeleteOk = _productService.Delete(id);
+                return base.Ok(isDeleteOk);
+            }
+            catch (Exception ex)
+            {
+                // Write log for ex
+                return Ok(false);
+            }
         }
 
         //[Route("image")]
