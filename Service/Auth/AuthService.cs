@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common;
 using Data;
 using Domain.DTOs;
 using Service.Users;
@@ -27,23 +28,19 @@ namespace Service.Auth
         public string Login(UserLogin data)
         {
             if (data.UserName == null)
-                throw new Exception("User is not found!");
+            {
+                throw new Exception(Constants.Account.InvalidAuthInfoMsg);
+            }
             //if (data == null)
             //    return false;
-            using (ShopDbContext shopDbContext = this.shopDbContext)
-            {
-                //var user = userService.GetUserByUserName(data.UserName);
-                //if(user == null || user.Password != data.Password)
-                //{
-                //    throw new Exception("Invalid password");
-                //}
 
-                // Todo: Check and implement service
-                var users = shopDbContext.Users.ToList();
-                var account = users.Any(a => a.UserName == data.UserName && a.Password == data.Password);
-                if (!account)
-                    throw new Exception("Invalid password"); // Todo: Must add braces
+            var users = _mapper.Map<UserLogin, Domain.Entities.User>(data);
+            var account = shopDbContext.Users.Any(a => a.UserName == users.UserName && a.Password == users.Password);
+            if (!account)
+            {
+                throw new Exception(Constants.Account.InvalidAuthInfoMsg);
             }
+
 
             var claims = new Claim[]
             {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace Domain.DTOs
 {
-    public class ProductDTO
+    public class ProductDTO : BaseEntity
     {
         public string Code { get; set; }
         public string Name { get; set; }

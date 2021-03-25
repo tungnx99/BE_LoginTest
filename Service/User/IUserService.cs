@@ -10,7 +10,6 @@ namespace Service.Users
 {
     public interface IUserService
     {
-        public UserDTO GetUser(string obj);
-        public Paganation<UserDTO> GetUsers(SerachPaganationDTO<UserDTO> userPaganationDTO);
+        public Paganation<UserDTO> GetUsers(SerachPaganationDTO<UserDTO> paganation);
     }
 }

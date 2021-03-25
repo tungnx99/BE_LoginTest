@@ -11,6 +11,7 @@ using Service.Auth;
 using Service.Users;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,28 +30,24 @@ namespace BE.Controllers
             _authService = authService;
             _userService = userService;
         }
-        // GET: api/<AccountController>
-        //[HttpGet]
-        //public IActionResult Get()
-        //{
-        //    return Ok(Domain.Entities.User.GetList());
-        //}
 
-        [Route("list")]
         [HttpGet]
         [Authorize]
         public IActionResult GetList([FromQuery] SerachPaganationDTO<UserDTO> userDTO)
         {
-            return CommonResponse(0, _userService.GetUsers(userDTO));
+            IActionResult result;
+            try
+            {
+                result = CommonResponse(0, _userService.GetUsers(userDTO));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: " + ex.Message);
+                result = CommonResponse(1, Constants.Server.ErrorServer);
+            }
+            return result;
         }
 
-        [Route("item")]
-        // GET api/<AccountController>/5
-        [HttpGet]
-        public IActionResult Get([FromQuery] string id)
-        {
-            return Ok(_userService.GetUser(id));
-        }
 
         // POST api/<AccountController>
         [HttpPost]
@@ -58,29 +55,18 @@ namespace BE.Controllers
         {
             if (!ModelState.IsValid || data == null || string.IsNullOrWhiteSpace(data.UserName))
             {
-                return CommonResponse(1, Constants.InvalidAuthInfoMsg);
+                return CommonResponse(1, Constants.Account.InvalidAuthInfoMsg);
             }
             try
             {
                 var token = _authService.Login(data);
                 return CommonResponse(0, token);
             }
-            catch
+            catch (Exception ex)
             {
-                return CommonResponse(1, Constants.InvalidAuthInfoMsg);
+                Debug.WriteLine("Error: " + ex.Message);
+                return CommonResponse(1, ex.Message);
             }
-        }
-
-        // PUT api/<AccountController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<AccountController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

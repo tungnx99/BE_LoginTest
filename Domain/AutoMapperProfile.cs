@@ -13,9 +13,11 @@ namespace Domain
         public AutoMapperProfile()
         {
             CreateMap<User, UserDTO>().ReverseMap();
-            CreateMap<SerachPaganationDTO<UserDTO>, Paganation<UserDTO>>().ReverseMap();
+            CreateMap<User, UserLogin>().ReverseMap();
             CreateMap<Product, ProductDTO>().ReverseMap();
-            CreateMap<SerachPaganationDTO<ProductDTO>, Paganation<Domain.Entities.Product>>().ReverseMap();
+            CreateMap<SerachPaganationDTO<UserDTO>, Paganation<UserDTO>>().ReverseMap();
+            CreateMap<SerachPaganationDTO<ProductDTO>, Paganation<Product>>().ReverseMap();
+            //CreateMap(typeof(SerachPaganationDTO<>), typeof(Paganation<>)).ReverseMap();
         }
     }
 }

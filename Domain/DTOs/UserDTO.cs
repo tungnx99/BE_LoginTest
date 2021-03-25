@@ -8,7 +8,7 @@ namespace Domain.DTOs
     public class UserDTO
     {
         public String UserName { get; set; }
-        public int Type { get; set; }
+        public int Role { get; set; }
     }
 
     public class UserLogin

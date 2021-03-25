@@ -2,7 +2,6 @@
 using Service.Auth;
 using Service.Product;
 using Service.Repository;
-using Service.Repository.User;
 using Service.Users;
 using System;
 using System.Collections.Generic;
@@ -15,7 +14,6 @@ namespace Service
         public static void Setup(IServiceCollection services)
         {
             //scoped
-            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IAuthService, AuthService>();

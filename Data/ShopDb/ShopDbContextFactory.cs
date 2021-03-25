@@ -24,7 +24,8 @@ namespace Data
 
             var connectionString = configuration.GetConnectionString("ShopDbContext");
 
-            builder.UseSqlServer(connectionString, b => b.MigrationsAssembly("Data")).ConfigureWarnings(c => c.Log((RelationalEventId.CommandExecuting, LogLevel.Debug)));
+            //builder.UseSqlServer(connectionString, b => b.MigrationsAssembly("Data")).ConfigureWarnings(c => c.Log((RelationalEventId.CommandExecuting, LogLevel.Debug)));
+            builder.UseSqlServer(connectionString);
 
             return new ShopDbContext(builder.Options);
         }

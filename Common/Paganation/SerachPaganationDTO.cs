@@ -6,8 +6,19 @@ namespace Common.Paganation
 {
     public class SerachPaganationDTO<T>
     {
+        public SerachPaganationDTO()
+        {
+            if (PageNumber < 1)
+            {
+                PageNumber = 1;
+            }
+        }
+
         public T Search { get; set; }
-        public int PageNumber { get; set; }
+        public int PageNumber
+        {
+            get; set;
+        }
         public int PageSize { get; set; } = 10;
         public int Take
         {

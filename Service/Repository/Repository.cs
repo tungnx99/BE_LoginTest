@@ -14,15 +14,25 @@ namespace Service.Repository
         {
             ShopDbContext = shopDbContext;
         }
-        public T Find(string id) {
-            return (T)ShopDbContext.Find(typeof(T), id);
+        public T Find(string id)
+        {
+            var item = (T)ShopDbContext.Find(typeof(T), id);
+            return item;
         }
-        public T Insert(T entity) {
+        public void Insert(T entity)
+        {
             ShopDbContext.Add(entity);
             ShopDbContext.SaveChanges();
-            return entity;
         }
-        public void Delete(string id) { }
-        public void Update(T entity) { }
+        public void Delete(string id)
+        {
+            var item = ShopDbContext.Find(typeof(T), id);
+            ShopDbContext.Remove(item);
+            ShopDbContext.SaveChanges();
+        }
+        public void Update(T entity) {
+            ShopDbContext.Update(entity);
+            ShopDbContext.SaveChanges();
+        }
     }
 }

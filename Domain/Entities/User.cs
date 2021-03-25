@@ -12,7 +12,7 @@ namespace Domain.Entities
         [Required]
         public DateTime BrithDay { get; set; }
         [Required]
-        public String Sex { get; set; } // Todo: Rename to Gender
+        public String Gender { get; set; } // Todo: Rename to Gender
         [Required]
         public String Name { get; set; }
         [Required]
@@ -22,7 +22,7 @@ namespace Domain.Entities
         [Required]
         public String Password { get; set; }
         [Required]
-        public int Type { get; set; } // Todo: Use specific name eg: Role
+        public int Role { get; set; } // Todo: Use specific name eg: Role
 
         //static List<User> accounts;
         ////public UserDTO MapUserDto()
@@ -44,8 +44,8 @@ namespace Domain.Entities
         //                Address = "aaaa",
         //                BrithDay = DateTime.Now,
         //                Name = "admin",
-        //                Sex = "Male",
-        //                Type = new Random().Next(0,3)
+        //                Gender = "Male",
+        //                Role = new Random().Next(0, 3)
         //            });
         //        }
         //    }
