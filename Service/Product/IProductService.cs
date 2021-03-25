@@ -10,7 +10,7 @@ namespace Service.Product
 {
     public interface IProductService
     {
-        public Paganation<Domain.Entities.Product> GetProducts(SerachPaganationDTO<ProductDTO> paganation);
+        public Paganation<Domain.Entities.Product> GetProducts(SerachPaganationDTO<ProductDTOUpadate> paganation);
         public void Upload(List<IFormFile> files, String namePath);
     }
 }

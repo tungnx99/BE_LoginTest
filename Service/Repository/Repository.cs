@@ -21,6 +21,7 @@ namespace Service.Repository
         }
         public void Insert(T entity)
         {
+            entity.Id = Guid.NewGuid().ToString();
             ShopDbContext.Add(entity);
             ShopDbContext.SaveChanges();
         }

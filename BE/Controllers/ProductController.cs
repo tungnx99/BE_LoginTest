@@ -24,10 +24,10 @@ namespace BE.Controllers
     public class ProductController : BaseController
     {
         private readonly IProductService _productService;
-        private readonly IRepository<ProductDTO> _repository;
+        private readonly IRepository<Domain.Entities.Product> _repository;
         private readonly IMapper _mapper;
 
-        public ProductController(IProductService productService, IRepository<ProductDTO> repository, IMapper mapper)
+        public ProductController(IProductService productService, IRepository<Domain.Entities.Product> repository, IMapper mapper)
         {
             _productService = productService;
             _repository = repository;
@@ -35,7 +35,7 @@ namespace BE.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetProducts([FromQuery] SerachPaganationDTO<ProductDTO> serachPaganation)
+        public IActionResult GetProducts([FromQuery] SerachPaganationDTO<ProductDTOUpadate> serachPaganation)
         {
             IActionResult result;
             try
@@ -56,14 +56,14 @@ namespace BE.Controllers
         [HttpPost]
         [Authorize]
         [Consumes("multipart/form-data")]
-        public Task<IActionResult> Insert([FromForm] ProductDTO dto)
+        public IActionResult Insert([FromForm] ProductDTO dto)
         {
             IActionResult result;
             try
             {
-                _productService.Upload(dto.files, dto.Code);
                 var product = _mapper.Map<ProductDTO, Domain.Entities.Product>(dto);
-                _repository.Insert(dto);
+                _repository.Insert(product);
+                _productService.Upload(files: dto.files, namePath: product.Id);
                 result = CommonResponse(0, Constants.Data.InsertSuccess);
             }
             catch (Exception ex)
@@ -71,20 +71,20 @@ namespace BE.Controllers
                 Debug.WriteLine("Error: " + ex.Message);
                 result = CommonResponse(0, Constants.Server.ErrorServer);
             }
-            return (Task<IActionResult>)result;
+            return result;
         }
 
         // PUT api/<ProductController>/5
         [HttpPut]
         [Authorize]
-        public Task<IActionResult> Update([FromForm] ProductDTO dto)
+        public IActionResult Update([FromForm] ProductDTOUpadate dto)
         {
             IActionResult result;
             try
             {
-                _productService.Upload(dto.files, dto.Code);
-                var product = _mapper.Map<ProductDTO, Domain.Entities.Product>(dto);
-                _repository.Update(dto);
+                var product = _mapper.Map<ProductDTOUpadate, Domain.Entities.Product>(dto);
+                _repository.Update(product);
+                _productService.Upload(files: dto.files, namePath: product.Id);
                 result = CommonResponse(0, Constants.Data.UpdateSuccess);
             }
             catch (Exception ex)
@@ -92,20 +92,20 @@ namespace BE.Controllers
                 Debug.WriteLine("Error: " + ex.Message);
                 result = CommonResponse(0, Constants.Server.ErrorServer);
             }
-            return (Task<IActionResult>) result;
+            return result;
         }
 
         // DELETE api/<ProductController>/5
         [HttpDelete]
         [Authorize]
-        public IActionResult Delete([FromQuery] String id)
+        public IActionResult Delete([FromForm] String id)
         {
             IActionResult result;
             try
             {
                 var product = _repository.Find(id);
-                _productService.Upload(null, product.Code);
                 _repository.Delete(id);
+                _productService.Upload(null, id);
                 result = CommonResponse(0, Constants.Data.DeleteSuccess);
             }
             catch (Exception ex)

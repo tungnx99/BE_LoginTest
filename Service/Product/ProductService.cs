@@ -23,7 +23,7 @@ namespace Service.Product
             this.shopDbContext = shopDbContext;
         }
 
-        public Paganation<Domain.Entities.Product> GetProducts(SerachPaganationDTO<ProductDTO> panagation) // Todo: Wrong parameter name
+        public Paganation<Domain.Entities.Product> GetProducts(SerachPaganationDTO<ProductDTOUpadate> panagation) // Todo: Wrong parameter name
         {
             if (panagation == null)
             {
@@ -36,7 +36,7 @@ namespace Service.Product
                 t.Name.Contains(panagation.Search.Name))
                 ).OrderBy(t => t.Name).ThenBy(t => t.Code).ThenBy(t => t.Quantity);
 
-            var result = _mapper.Map<SerachPaganationDTO<ProductDTO>, Paganation<Domain.Entities.Product>>(panagation);
+            var result = _mapper.Map<SerachPaganationDTO<ProductDTOUpadate>, Paganation<Domain.Entities.Product>>(panagation);
             var productdtos = data.Take(panagation.Take).Skip(panagation.Skip).ToList();
 
             result.InputData(totalItems: data.Count(), data: productdtos);
