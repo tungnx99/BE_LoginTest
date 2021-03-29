@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Common
@@ -20,6 +21,7 @@ namespace Common
             public static readonly object InsertSuccess;
             public static readonly object UpdateSuccess;
             public static readonly object DeleteSuccess;
+            public static readonly string UploadFail;
         }
     }
 }

@@ -43,7 +43,7 @@ namespace Service.Product
             return result;
         }
 
-        public async void Upload(List<IFormFile> files, String namePath)
+        public async Task<bool> Upload(List<IFormFile> files, String namePath)
         {
             var filePath = Directory.GetCurrentDirectory() + @"\wwwroot\Images\Products\" + namePath;
             if (Directory.Exists(filePath))
@@ -64,7 +64,9 @@ namespace Service.Product
                         }
                     }
                 }
+                return true;
             }
+            return false;
         }
     }
 }

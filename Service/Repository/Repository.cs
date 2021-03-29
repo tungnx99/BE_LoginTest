@@ -25,6 +25,14 @@ namespace Service.Repository
             ShopDbContext.Add(entity);
             ShopDbContext.SaveChanges();
         }
+
+        public void Insert(T entity, string id)
+        {
+            entity.Id = id;
+            ShopDbContext.Add(entity);
+            ShopDbContext.SaveChanges();
+        }
+
         public void Delete(string id)
         {
             var item = ShopDbContext.Find(typeof(T), id);

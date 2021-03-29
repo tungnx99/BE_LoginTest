@@ -11,6 +11,6 @@ namespace Service.Product
     public interface IProductService
     {
         public Paganation<Domain.Entities.Product> GetProducts(SerachPaganationDTO<ProductDTOUpadate> paganation);
-        public void Upload(List<IFormFile> files, String namePath);
+        public Task<bool> Upload(List<IFormFile> files, String namePath);
     }
 }

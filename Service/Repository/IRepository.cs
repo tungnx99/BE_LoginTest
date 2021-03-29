@@ -7,6 +7,7 @@ namespace Service.Repository
         void Delete(string id);
         T Find(string id);
         void Insert(T entity);
+        void Insert(T entity, string id);
         void Update(T entity);
     }
 }

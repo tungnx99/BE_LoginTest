@@ -56,14 +56,18 @@ namespace BE.Controllers
         [HttpPost]
         [Authorize]
         [Consumes("multipart/form-data")]
-        public IActionResult Insert([FromForm] ProductDTO dto)
+        public async Task<IActionResult> Insert([FromForm] ProductDTO dto)
         {
             IActionResult result;
             try
             {
+                var id = Guid.NewGuid().ToString();
+                if (!await _productService.Upload(files: dto.files, namePath: id))
+                {
+                    throw new Exception(Constants.Data.UploadFail);
+                }
                 var product = _mapper.Map<ProductDTO, Domain.Entities.Product>(dto);
-                _repository.Insert(product);
-                _productService.Upload(files: dto.files, namePath: product.Id);
+                _repository.Insert(product, id);
                 result = CommonResponse(0, Constants.Data.InsertSuccess);
             }
             catch (Exception ex)
@@ -77,14 +81,17 @@ namespace BE.Controllers
         // PUT api/<ProductController>/5
         [HttpPut]
         [Authorize]
-        public IActionResult Update([FromForm] ProductDTOUpadate dto)
+        public async Task<IActionResult> Update([FromForm] ProductDTOUpadate dto)
         {
             IActionResult result;
             try
             {
+                if (!await _productService.Upload(files: dto.files, namePath: dto.Id))
+                {
+                    throw new Exception(Constants.Data.UploadFail);
+                }
                 var product = _mapper.Map<ProductDTOUpadate, Domain.Entities.Product>(dto);
                 _repository.Update(product);
-                _productService.Upload(files: dto.files, namePath: product.Id);
                 result = CommonResponse(0, Constants.Data.UpdateSuccess);
             }
             catch (Exception ex)
@@ -98,14 +105,17 @@ namespace BE.Controllers
         // DELETE api/<ProductController>/5
         [HttpDelete]
         [Authorize]
-        public IActionResult Delete([FromForm] String id)
+        public async Task<IActionResult> Delete([FromForm] String id)
         {
             IActionResult result;
             try
             {
+                if (!await _productService.Upload(files: null, namePath: id))
+                {
+                    throw new Exception(Constants.Data.UploadFail);
+                }
                 var product = _repository.Find(id);
                 _repository.Delete(id);
-                _productService.Upload(null, id);
                 result = CommonResponse(0, Constants.Data.DeleteSuccess);
             }
             catch (Exception ex)
