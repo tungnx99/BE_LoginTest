@@ -1,11 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Infrastructure.EntityFramework;
+using Microsoft.Extensions.DependencyInjection;
 using Service.Auth;
 using Service.Product;
-using Service.Repository;
 using Service.Users;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Service
 {
@@ -19,7 +16,10 @@ namespace Service
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IJwtManager, JwtManager>();
 
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+            services.AddScoped(typeof(IRepositoryAsync<>), typeof(BaseRepository<>));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUnitOfWorkAsync, UnitOfWork>();
         }
     }
 }

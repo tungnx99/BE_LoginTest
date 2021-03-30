@@ -3,13 +3,9 @@ using Common.Paganation;
 using Data;
 using Domain.DTOs;
 using Domain.Entities;
-using Microsoft.AspNetCore.Mvc;
-using Service.Repository;
-using System;
+using Infrastructure.EntityFramework;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
 namespace Service.Users
 {
     public class UserService : IUserService

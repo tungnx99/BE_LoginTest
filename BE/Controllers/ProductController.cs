@@ -3,17 +3,18 @@ using Common;
 using Common.Http;
 using Common.Paganation;
 using Domain.DTOs;
+using Infrastructure.EntityFramework;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Product;
-using Service.Repository;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Infrastructure.Extensions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,11 +27,13 @@ namespace BE.Controllers
         private readonly IProductService _productService;
         private readonly IRepository<Domain.Entities.Product> _repository;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ProductController(IProductService productService, IRepository<Domain.Entities.Product> repository, IMapper mapper)
+        public ProductController(IProductService productService, IUnitOfWork unitOfWork, IRepository<Domain.Entities.Product> repository, IMapper mapper)
         {
             _productService = productService;
             _repository = repository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
@@ -54,7 +57,7 @@ namespace BE.Controllers
 
         // POST api/<ProductController>
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Insert([FromForm] ProductDTO dto)
         {
@@ -62,12 +65,14 @@ namespace BE.Controllers
             try
             {
                 var id = Guid.NewGuid().ToString();
-                if (!await _productService.Upload(files: dto.files, namePath: id))
-                {
-                    throw new Exception(Constants.Data.UploadFail);
-                }
+                //if (!await _productService.Upload(files: dto.files, namePath: id))
+                //{
+                //    throw new Exception(Constants.Data.UploadFail);
+                //}
                 var product = _mapper.Map<ProductDTO, Domain.Entities.Product>(dto);
-                _repository.Insert(product, id);
+                _repository.Insert(product);
+                _unitOfWork.SaveChanges();
+               
                 result = CommonResponse(0, Constants.Data.InsertSuccess);
             }
             catch (Exception ex)
@@ -86,7 +91,7 @@ namespace BE.Controllers
             IActionResult result;
             try
             {
-                if (!await _productService.Upload(files: dto.files, namePath: dto.Id))
+                if (!await _productService.Upload(files: dto.files, namePath: dto.Id.ToString()))
                 {
                     throw new Exception(Constants.Data.UploadFail);
                 }

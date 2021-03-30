@@ -47,12 +47,6 @@ namespace UnitTest
             var result = _userService.Login(new UserLogin() { UserName = "admin1", Password = "123456"});
             Assert.IsTrue(result);
         }
-
-        [TestMethod]
-        public void TestILoginFalse()
-        {
-            var result = _userService.Login(new UserLogin() { UserName = "", Password = "" });
-            Assert.IsFalse(result);
-        }
+        D
     }
 }

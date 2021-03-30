@@ -9,13 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{E5E758B3-505B-4A28-AC17-E8323318EECC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTest", "UnitTest\UnitTest.csproj", "{EDA0AAD6-399B-4F19-99E6-14A90DD081BF}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", "{150509ED-0059-41AA-9BE3-82A77F76A699}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{D573E4BD-BCFB-44DD-9250-7F9B9D3081A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{D573E4BD-BCFB-44DD-9250-7F9B9D3081A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{89575C41-DCB4-4702-8D2F-7636ECD53DBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{89575C41-DCB4-4702-8D2F-7636ECD53DBA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +33,6 @@ Global
 		{E5E758B3-505B-4A28-AC17-E8323318EECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5E758B3-505B-4A28-AC17-E8323318EECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5E758B3-505B-4A28-AC17-E8323318EECC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EDA0AAD6-399B-4F19-99E6-14A90DD081BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EDA0AAD6-399B-4F19-99E6-14A90DD081BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EDA0AAD6-399B-4F19-99E6-14A90DD081BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EDA0AAD6-399B-4F19-99E6-14A90DD081BF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{150509ED-0059-41AA-9BE3-82A77F76A699}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{150509ED-0059-41AA-9BE3-82A77F76A699}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{150509ED-0059-41AA-9BE3-82A77F76A699}.Release|Any CPU.ActiveCfg = Release|Any CPU
