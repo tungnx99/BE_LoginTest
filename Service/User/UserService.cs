@@ -11,13 +11,11 @@ namespace Service.Users
     public class UserService : IUserService
     {
         private IMapper _mapper;
-        private ShopDbContext shopDbContext;
         private readonly IRepository<User> dataRepository;
 
-        public UserService(IMapper mapper, ShopDbContext shopDbContext, IRepository<User> dataRepository)
+        public UserService(IMapper mapper, IRepository<User> dataRepository)
         {
             _mapper = mapper;
-            this.shopDbContext = shopDbContext;
             this.dataRepository = dataRepository;
         }
 
@@ -33,7 +31,7 @@ namespace Service.Users
 
             var result = _mapper.Map<SerachPaganationDTO<UserDTO>, Paganation<UserDTO>>(paganation);
 
-            var matchUsers = shopDbContext.Users
+            var matchUsers = dataRepository.Queryable()
                 .Where(it => paganation.Search == null || it.UserName.Contains(paganation.Search.UserName))
                 .OrderBy(it => it.Role)
                 .ThenBy(it => it.UserName);
